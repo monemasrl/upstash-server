@@ -11,6 +11,7 @@ from pydantic_settings import BaseSettings
 from redis import asyncio as aioredis
 
 security = HTTPBearer()
+logger = logging.getLogger("uvicorn")
 
 async def make_bearer_token():
     """
@@ -27,7 +28,7 @@ class Config(BaseSettings):
         redis_port=os.environ.get('REDIS_PORT', '6379'),
         redis_db=os.environ.get('REDIS_DB', '0'),
     )
-
+    
     token: str = 'NOT_CONFIGURED'
 
 
@@ -43,7 +44,6 @@ config = Config()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger = logging.getLogger("uvicorn")
     token = await make_bearer_token()
     config.token = token
     logger.info(f'Bearer token: {token}')
@@ -73,13 +73,16 @@ async def post_catch_all(request: Request, response: Response, body: List[str | 
     if command == 'set':
         key = data[1]
         value = data[2]
+        logger.info(f'Setting {key} to {value}')
         await client.set(key, value)
     elif command == 'get':
         key = data[1]
+        logger.info(f'Getting {key} returned {value}')
         value = await client.get(key)
         # Deserialize the value from JSON.
     elif command == 'delete':
         key = data[1]
+        logger.info(f'Deleting {key}')
         await client.delete(key)
     elif command == 'keys':
         if len(data) > 1:
@@ -105,13 +108,16 @@ async def catch_all(request: Request, response: Response, path_name: str, creden
 
     if command == 'get':
         key = request_params[1]
+        logger.info(f'Getting {key} returned {value}')
         value = await client.get(key)
     elif command == 'set':
         key = request_params[1]
         value = request_params[2] if len(request_params) > 2 else None
+        logger.info(f'Setting {key} to {value}')
         await client.set(key, value)
     elif command == 'delete':
         key = request_params[1]
+        logger.info(f'Deleting {key}')
         await client.delete(key)
     elif command == 'keys':
         if len(request_params) > 1:
