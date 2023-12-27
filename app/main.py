@@ -70,7 +70,7 @@ async def post_catch_all(request: Request, response: Response, body: List[str | 
         logger.info(f'Invalid token: {credentials.credentials}')
         return { "error": "Invalid token" }
     data = await request.json()
-    command = data[0]
+    command = data[0].lower() if isinstance(data[0], str) else None 
 
     logger.info(f'Command: {command}')
     logger.info(f'Data: {data}')
@@ -114,7 +114,7 @@ async def catch_all(request: Request, response: Response, path_name: str, creden
 
     value = None
     request_params = path_name.split('/')
-    command = request_params[0]
+    command = request_params[0].lower() if len(request_params) > 0 else None
 
     if command == 'get':
         key = request_params[1]
