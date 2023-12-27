@@ -3,12 +3,12 @@ import os
 from contextlib import asynccontextmanager
 from typing import Annotated, List
 
-import aioredis
 import uvicorn
 from fastapi import Depends, FastAPI, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic_settings import BaseSettings
+from redis import asyncio as aioredis
 
 security = HTTPBearer()
 
