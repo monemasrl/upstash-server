@@ -66,6 +66,7 @@ async def post_catch_all(request: Request, response: Response, body: List[str | 
     if credentials.credentials != config.token:
         """If the token is invalid, return a 401 error."""
         response.status_code = status.HTTP_401_UNAUTHORIZED
+        logger.info(f'Invalid token: {credentials.credentials}')
         return { "error": "Invalid token" }
     data = await request.json()
     command = data[0]
@@ -103,6 +104,7 @@ async def catch_all(request: Request, response: Response, path_name: str, creden
     if credentials.credentials != config.token:
         """If the token is invalid, return a 401 error."""
         response.status_code = status.HTTP_401_UNAUTHORIZED
+        logger.info(f'Invalid token: {credentials.credentials}')
         return { "error": "Invalid token" }
 
     value = None
