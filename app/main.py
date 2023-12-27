@@ -63,6 +63,7 @@ app.add_middleware(
 
 @app.post("/")
 async def post_catch_all(request: Request, response: Response, body: List[str | int], credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]):
+    
     if credentials.credentials != config.token:
         """If the token is invalid, return a 401 error."""
         response.status_code = status.HTTP_401_UNAUTHORIZED
@@ -71,8 +72,8 @@ async def post_catch_all(request: Request, response: Response, body: List[str | 
     data = await request.json()
     command = data[0]
 
-    logging.info(f'Command: {command}')
-    logging.info(f'Data: {data}')
+    logger.info(f'Command: {command}')
+    logger.info(f'Data: {data}')
     value = None
     if command == 'set':
         key = data[1]
@@ -98,6 +99,10 @@ async def post_catch_all(request: Request, response: Response, body: List[str | 
         value = await client.info()
 
     return { "result": value }
+
+@app.get("/")
+async def root():
+    return { "result": "OK" }
 
 @app.get("/{path_name:path}")
 async def catch_all(request: Request, response: Response, path_name: str, credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)]):
