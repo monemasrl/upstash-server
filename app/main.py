@@ -69,6 +69,9 @@ async def post_catch_all(request: Request, response: Response, body: List[str | 
         return { "error": "Invalid token" }
     data = await request.json()
     command = data[0]
+
+    logging.info(f'Command: {command}')
+    logging.info(f'Data: {data}')
     value = None
     if command == 'set':
         key = data[1]
