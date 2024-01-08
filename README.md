@@ -23,10 +23,13 @@ To run the image you can set the following environment variables:
 
 |Name|Required |Default |
 |----------|----|----|
-|REDIS_PORT|No | localhost |
+|REDIS_HOST|No | localhost |
 |REDIS_PORT | No | 6379|
 |REDIS_DB | No | 0 |
-|BEARER_TOKEN| No | Self Generated |
+|REDIS_ADMIN_PORT|No | localhost |
+|REDIS_ADMIN_PORT | No | 6379|
+|REDIS_ADMIN_DB | No | 0 |
+
 
 ```bash
 docker run -d upstash-server
